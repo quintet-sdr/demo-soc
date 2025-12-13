@@ -113,9 +113,39 @@ Also, to simulate having DNS-server we used /etc/hosts files on other machines:
 ### Plan
 
 We have 2 "client machines", one hosting vulnarable application. Our testing included:
-- Windows 10 machine SMB pseudo-brute-force with `smbclient` and `hydra` on ParrotOS.
-- Ubuntu 24.04 machine attack via `hydra` as we did on lab.
 - Attack Juice-Shop via XSSi.
+- Ubuntu 24.04 machine attack via `hydra` as we did on lab.
+- Windows 10 machine SMB pseudo-brute-force with `smbclient` and `hydra` on ParrotOS.
+
+### Juice Shop
+
+Since we created a primitive [anti-XSS suricata rules](https://github.com/quintet-sdr/demo-soc/blob/main/configs/xss.rules), we made XSS attacks simulation (see the demo):
+
+```bash
+curl "http://juiceshop/q?=<iframe%20javascript%3D%22alert('')%2F%3E"
+```
+
+and got `405` HTTP response code.
+
+![ids](/assets/ids.png)
+
+### Ubuntu check
+
+Some host information after SCA. Here we filtered only high-severity vulnerabilites since ubuntu host is Arsen's personal workstation:
+
+![ubuntu_vd](/assets/ubuntu_VD.jpg)
+
+Logs work well:
+
+![ubuntu_mitre](/assets/ubuntu_mitre.jpg)
+
+Let's repeat the lab scenario with ssh brute force:
+
+![ubuntu_mitre](/assets/ubuntu_brute1.jpg)
+
+![ubuntu_mitre](/assets/ubuntu_brute2.jpg)
+
+Again we see familiar attacker's IP, but now in log message.
 
 ### Windows check
 
@@ -135,36 +165,7 @@ Some details and we know that attackers used Parrot OS, it's IP and other detail
 
 Success
 
-### Ubuntu check
-
-Some host information after SCA. Here we filtered only high-severity vulnerabilites since ubuntu host is Arsen's personal workstation:
-
-![ubuntu_vd](/assets/ubuntu_VD.jpg)
-
-Logs work well:
-
-![ubuntu_mitre](/assets/ubuntu_mitre.jpg)
-
-Let's repeat the lab scenario with ssh brute force:
-
-![ubuntu_mitre](/assets/ubuntu_brute1.jpg)
-
-![ubuntu_mitre](/assets/ubuntu_brute2.jpg)
-
-
-Again we see familiar attacker's IP, but now in log message. During the analysis it gave a thought Windows logs a bit better structured for SIEM normalization, comparing Linux syslog.
-
-### Juice Shop
-
-Since we created a primitive [anti-XSS suricata rules](https://github.com/quintet-sdr/demo-soc/blob/main/configs/xss.rules), we made XSS attacks simulation (see the demo):
-
-```bash
-curl "http://juiceshop/q?=<iframe%20javascript%3D%22alert('')%2F%3E"
-```
-
-and got `405` HTTP response code.
-
-![ids](/assets/ids.png)
+ During the analysis it gave a thought Windows logs a bit better structured for SIEM normalization, comparing Linux syslog.
 
 ## Conclusion
 
@@ -178,4 +179,29 @@ https://github.com/quintet-sdr/demo-soc
 
 ## Demo video
 
-https://github.com/quintet-sdr/demo-soc/blob/main/recordings/demo.mp4
+https://github.com/quintet-sdr/demo-soc/blob/main/recordings/GalievNguenZavadskii-demo.mp4
+
+### Tools used
+
+Infra:
+- Mi router
+- Oracle VirtualBox Community
+- VMWare Workstation Pro
+
+Defense tools:
+- Wazuh Managment deploy
+- Suricata IDS
+- Nginx
+
+OS:
+- Windows 10 Pro
+- Ubuntu 24.04 LTS
+- Parrot OS
+- Docker
+- OWASP Juice Shop
+
+Attack tools:
+- smbclient
+- hydra
+- curl
+- nmap
