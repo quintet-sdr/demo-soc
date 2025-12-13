@@ -1,0 +1,23 @@
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"WEB-APP XSS attempt - script tag in URI"; flow:to_server,established; http.uri; pcre:"/<\s*script\b/i"; classtype:web-application-attack; sid:9000001; rev:2;)
+
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"WEB-APP XSS attempt - event handler in URI (on*=)"; flow:to_server,established; http.uri; pcre:"/\bon\w+\s*=\s*['\"]?/i"; classtype:web-application-attack; sid:9000002; rev:2;)
+
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"WEB-APP XSS attempt - javascript: scheme in URI"; flow:to_server,established; http.uri; pcre:"/\bjavascript\s*:/i"; classtype:web-application-attack; sid:9000003; rev:2;)
+
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"WEB-APP XSS attempt - suspicious HTML tag in URI"; flow:to_server,established; http.uri; pcre:"/<\s*(img|svg|iframe|object|embed|link|style)\b/i"; classtype:web-application-attack; sid:9000004; rev:2;)
+
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"WEB-APP XSS attempt - script tag in request body"; flow:to_server,established; http.request_body; pcre:"/<\s*script\b/i"; classtype:web-application-attack; sid:9000010; rev:2;)
+
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"WEB-APP XSS attempt - event handler in request body (on*=)"; flow:to_server,established; http.request_body; pcre:"/\bon\w+\s*=\s*['\"]?/i"; classtype:web-application-attack; sid:9000011; rev:2;)
+
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"WEB-APP XSS attempt - javascript: scheme in request body"; flow:to_server,established; http.request_body; pcre:"/\bjavascript\s*:/i"; classtype:web-application-attack; sid:9000012; rev:2;)
+
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"WEB-APP XSS attempt - URL-encoded < or > in URI (%3c/%3e)"; flow:to_server,established; http.uri; pcre:"/%(3c|3e)/i"; classtype:web-application-attack; sid:9000020; rev:2;)
+
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"WEB-APP XSS attempt - HTML entity encoded angle brackets"; flow:to_server,established; http.request_body; pcre:"/&#x0*3c\;|&#0*60\;|&#x0*3e\;|&#0*62\;/i"; classtype:web-application-attack; sid:9000021; rev:2;)
+
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"WEB-APP XSS attempt - unicode escape text \\u003c / \\u003e"; flow:to_server,established; http.request_body; pcre:"/\\\\u0*003c|\\\\u0*003e/i"; classtype:web-application-attack; sid:9000022; rev:2;)
+
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"WEB-APP XSS attempt - suspicious pattern in Referer header"; flow:to_server,established; http.header; pcre:"/Referer\s*:\s*.*(<\s*script\b|\bjavascript\s*:|\bon\w+\s*=)/i"; classtype:web-application-attack; sid:9000030; rev:2;)
+
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"WEB-APP XSS attempt - repeated suspicious markers (thresholded)"; flow:to_server,established; http.uri; pcre:"/(<\s*script\b|\bjavascript\s*:|\bon\w+\s*=|%3c|%3e)/i"; classtype:web-application-attack; sid:9000099; rev:2; threshold:type both, track by_src, count 5, seconds 60;)
