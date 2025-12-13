@@ -53,7 +53,7 @@ However, we finally coped with it by troubleshooting the machines.
 
 ![image](/assets/wazuh_master.jpg)
 
-Therefore, we increased our understanding in DevSecOps field.
+Therefore, we increased our understanding in DevSecOps and SOC field.
 
 ## Setup
 
