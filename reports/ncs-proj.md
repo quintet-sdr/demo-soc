@@ -7,26 +7,26 @@ By:
 
 ### Goal/Tasks of the Project
 
-The main goal of the project, is to create a SIEM system following this architecture.
+The main goal of the project, is to create a simulated work of protected by a SIEM and WAF network that would be attacked. We created the architecture below:
 
 ![image](/assets/Architecture.png)
 
-Therefore, we are able not only to prevent different types of vulnarability attacks using firewall (opensource firewall "Suricata") but also manage the system in case of cyber security using Wazuh.
+Therefore, we are able not only detect and prevent typical attacks as brute-force, malware installation and pwns via Wazuh SIEM, but detect and prevent some of them and additional attacks (e.g. injections) via IDS/IPS Suricata. 
 
 Thus, we have the following stack : 
 
 * 5 virtual machines. 3 Ubuntu, 1 Windows and 1 ParrotOS
 * Wazuh (SIEM system)
-* Suricata (Firewall)
+* Suricata (IDS/IPS)
 * Nginx (Load-balancer)
 
 ### Configuration plan (Environment preparartion) 
 
 1) Architecture creation, configuring private network using L3 router and starting components deploying.
 
-2) Deploy nginx with custom nginx config that will redirect all the requests to the required servers. Install Suricata firewall and create rules for preventing XSS attacks.
+2) Deploy nginx with custom config that will redirect all the requests to the required servers. Install Suricata and create rules for preventing XSS attacks.
 
-3) Deploy Wazuh master and wazuh agents on different virtual machines and create connection between them. Deloy JuiceShop application to test attacks.
+3) Deploy Wazuh master and Wazuh agents on different virtual machines and create connection between them. Deloy JuiceShop application to test attacks.
 
 
 ### Development of solution/tests as the PoC 
@@ -39,20 +39,125 @@ Thus, we have the following stack :
 
 ### Difficulties faced, new skills acquired during the project
 
-There were several difficulties related to wazuh agent-server connection and Windows machine integration. 
+There were several difficulties related to Wazuh agent-server connection and Windows machine integration:
 
+- We used following command to set up manager:
+```bash
+curl -sO https://packages.wazuh.com/4.11/wazuh-install.sh && sudo bash ./wazuh-install.sh -a
+```
+And probably since we used not the latest version, the agents configs files were not able to run agents from the box, so we had to remove some unused declarations.
 
-However, we finally coped with it.
+- Config files rules managing
+
+However, we finally coped with it by troubleshooting the machines.
 
 ![image](/assets/wazuh_master.jpg)
 
-Therefore, we increased our understanding in devops sphere.
-### Conclusion, contemplations, and judgment
+Therefore, we increased our understanding in DevSecOps field.
 
-The project successfully implemented a SOC model based on open tools: Suricata for network protection and Wazuh for Diptych nodes. The architecture with nginx and JuiceShop allows you to test attack detection (for example, XSS) and handle incidents.
+## Setup
 
-The system demonstrated the importance of centralized event collection to quickly identify threats. Such a testbed could become the basis for more complex scenarios, including automation of response (SOAR) and cloud deployment.
+### Wazuh
 
-## Github link
+As we stated above, we used a command to install Wazuh manager. After installation and machines availability check, we deployed agents:
+- Windwos10
+```powershell
+Invoke-WebRequest -Uri https://packages.wazuh.com/4.11/windows/wazuh-agent-4.11.0-1.msi -OutFile $env:TMP\wazuh-agent.msi; msiexec.exe /i $env:TMP\wazuh-agent.msi /q WAZUH_MANAGER='192.168.31.152' WAZUH_AGENT_NAME='Windows10'; Start-Service wazuhSvc
+
+NET start WazuhSvc
+```
+
+- Ubuntu 24.04
+```sh
+sudo wget https://packages.wazuh.com/4.11/apt/pool/main/w/wazuh-agent/wazuh-agent_4.11.0-1_amd64.deb && sudo WAZUH_MANAGER='192.168.31.152' dpkg -i ./wazuh-agent_4.11.0-1_amd64.deb
+
+sudo systemctl daemon-reload
+sudo systemctl enable wazuh-agent
+sudo systemctl start wazuh-agent
+```
+
+Since we had conflicts in agents and `ossec.conf` installed by them, we removed rules for *browser extensions, processes and groups*.
+
+Config for Ubuntu:
+[configs/ubuntu/ossec.conf](https://github.com/quintet-sdr/demo-soc/tree/main/configs/ububntu/ossec.conf)
+
+Config for Windows:
+[configs/windows/ossec.conf](https://github.com/quintet-sdr/demo-soc/tree/main/configs/windows/ossec.conf)
+
+### Suricata
+
+To install Suricata we used the following guide: [habr.com](https://habr.com/ru/articles/825460/)
+
+### Nginx
+
+///
+
+## PoC, Demonstration
+
+### Plan
+
+We have 2 "client machines", one hosting vulnarable application. Our testing included:
+- Windows 10 machine SMB pseudo-brute-force with `smbclient` and `hydra` on ParrotOS.
+- Ubuntu 24.04 machine attack via `hydra` as we did on lab.
+- Attack Juice-Shop via XSSi.
+
+### Windows check
+
+Windows Vulnerability detect:
+
+![win_vd](/assets/windows_VD.jpg)
+
+As you can see on the video, we detected in Wazuh events that Parrot OS attacker's attempts to brute windows guest session password:
+
+![win_mitre](/assets/windows_mitre.jpg)
+
+Some details and we know that attackers used Parrot OS, it's IP and other details:
+
+![win_info](/assets/windows_logon_info.jpg)
+
+![win_info](/assets/windows_logon_info2.jpg)
+
+Success
+
+### Ubuntu check
+
+Some host information after SCA. Here we filtered only high-severity vulnerabilites since ubuntu host is Arsen's personal workstation:
+
+![ubuntu_vd](/assets/ubuntu_VD.jpg)
+
+Logs work well:
+
+![ubuntu_mitre](/assets/ubuntu_mitre.jpg)
+
+Let's repeat the lab scenario with ssh brute force:
+
+![ubuntu_mitre](/assets/ubuntu_brute1.jpg)
+
+![ubuntu_mitre](/assets/ubuntu_brute2.jpg)
+
+
+Again we see familiar attacker's IP, but now in log message. During the analysis it gave a thought Windows logs a bit better structured for SIEM normalization, comparing Linux syslog.
+
+### Juice Shop
+
+Since we created a primitive [anti-XSS suricata rules](https://github.com/quintet-sdr/demo-soc/blob/main/configs/xss.rules), we made XSS attacks simulation (see the demo):
+
+```bash
+curl "http://juiceshop/q?=<iframe%20javascript%3D%22alert('')%2F%3E"
+```
+
+and got `405` HTTP response code.
+
+## Conclusion
+
+In conclusion, this project successfully demonstrated the implementation of a Security Operations Center (SOC) model utilizing open-source tools, including Suricata + Nginx for network intrusion detection and prevention, almost WAF simulation, and Wazuh for endpoint security. The integrated architecture, incorporating Nginx as a load balancer and JuiceShop as a vulnerable application, facilitates comprehensive testing of attack detection mechanisms, such as cross-site scripting (XSS), and incident response capabilities.
+
+The system underscored the critical role of centralized event collection in enabling rapid threat identification and mitigation. Furthermore, this proof-of-concept serves as a foundational platform for advancing more sophisticated security scenarios, encompassing Security Orchestration, Automation, and Response (SOAR) integration, as well as cloud-based deployments.
+
+## GitHub
+
 https://github.com/quintet-sdr/demo-soc
-## Demo
+
+## Demo video
+
+https://github.com/quintet-sdr/demo-soc/blob/main/recordings/demo.mp4
