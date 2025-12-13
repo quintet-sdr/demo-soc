@@ -90,13 +90,13 @@ To install Suricata we used the following guide: [habr.com](https://habr.com/ru/
 
 ### Nginx
 
-Here how was the load-balancer configured: https://github.com/quintet-sdr/demo-soc/blob/main/configs/nginx.conf
+Here how was the load-balancer configured: [nginx.conf](https://github.com/quintet-sdr/demo-soc/blob/main/configs/nginx.conf)
 
 Also, to simulate having DNS-server we used /etc/hosts files on other machines:
 
-- Windows:
+- Windows: [system32/drivers/etc/hosts](https://github.com/quintet-sdr/demo-soc/blob/main/configs/windows/hosts)
 
-- Linux: 
+- Linux (Parrot & Ubuntu): [/etc/hosts](https://github.com/quintet-sdr/demo-soc/blob/main/configs/ubuntu/hosts)
 
 ## PoC, Demonstration
 
@@ -154,11 +154,13 @@ curl "http://juiceshop/q?=<iframe%20javascript%3D%22alert('')%2F%3E"
 
 and got `405` HTTP response code.
 
+![ids](/assets/ids.png)
+
 ## Conclusion
 
 In conclusion, this project successfully demonstrated the implementation of a Security Operations Center (SOC) model utilizing open-source tools, including Suricata + Nginx for network intrusion detection and prevention, almost WAF simulation, and Wazuh for endpoint security. The integrated architecture, incorporating Nginx as a load balancer and JuiceShop as a vulnerable application, facilitates comprehensive testing of attack detection mechanisms, such as cross-site scripting (XSS), and incident response capabilities.
 
-The system underscored the critical role of centralized event collection in enabling rapid threat identification and mitigation. Furthermore, this proof-of-concept serves as a foundational platform for advancing more sophisticated security scenarios, encompassing Security Orchestration, Automation, and Response (SOAR) integration, as well as cloud-based deployments.
+The system underscored the critical role of centralized event collection in enabling rapid threat identification and mitigation. Furthermore, this proof-of-concept serves as a foundational platform for advancing more sophisticated security scenarios, encompassing WAF, OpenCTI, SIEM-EDR combinations (Splunk + Wazuh) as cluster-based deployments.
 
 ## GitHub
 
