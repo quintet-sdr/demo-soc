@@ -88,6 +88,16 @@ Config for Windows:
 
 To install Suricata we used the following guide: [habr.com](https://habr.com/ru/articles/825460/)
 
+```bash
+sudo apt-get update
+sudo apt-get install -y software-properties-common
+sudo add-apt-repository ppa:oisf/suricata-stable
+sudo apt-get update
+sudo apt-get install -y suricata
+suricata --build-info
+sudo suricata -c /etc/suricata/suricata.yaml -i wlp0s20f3 # interface name
+```
+
 ### Nginx
 
 Here how was the load-balancer configured: [nginx.conf](https://github.com/quintet-sdr/demo-soc/blob/main/configs/nginx.conf)
