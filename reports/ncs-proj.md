@@ -15,11 +15,16 @@ Therefore, we are able not only to prevent different types of vulnarability atta
 
 ### Execution plan/Methodology
 
-1) We created an architecture, configured private network using L3 router and started components deploying.
+1) Architecture creation, configuring private network using L3 router and starting components deploying.
 
-2) 
+2) Deploy nginx with custom nginx config that will redirect all the requests to the required servers. Install Suricata firewall and create rules for preventing XSS attacks.
+
+3) Deploy Wazuh master and wazuh agents on different virtual machines and create connection between them. Deloy JuiceShop application to test attacks.
+
 
 ### Development of solution/tests as the PoC 
+
+1) We followed the execution plan and created a private network with all nessecary components.
 
 ### Difficulties faced, new skills acquired during the project
 
