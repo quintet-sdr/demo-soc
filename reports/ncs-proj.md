@@ -90,7 +90,13 @@ To install Suricata we used the following guide: [habr.com](https://habr.com/ru/
 
 ### Nginx
 
-///
+Here how was the load-balancer configured: https://github.com/quintet-sdr/demo-soc/blob/main/configs/nginx.conf
+
+Also, to simulate having DNS-server we used /etc/hosts files on other machines:
+
+- Windows:
+
+- Linux: 
 
 ## PoC, Demonstration
 
