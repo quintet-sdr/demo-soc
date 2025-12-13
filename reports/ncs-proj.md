@@ -1,17 +1,15 @@
-
-
+# SOC stand simulation project
 
 By:
-• Galiev Arsen - a.galiev@innopolis.university
-• Nguen Ilya-Linh - i.nguen@innopolis.university
-• Zavadskii Peter - p.zavadskii@innopolis.university
-
+- Galiev Arsen - a.galiev@innopolis.university
+- Nguen Ilya-Linh - i.nguen@innopolis.university
+- Zavadskii Peter - p.zavadskii@innopolis.university
 
 ### Goal/Tasks of the Project 
 
 The main goal of the project, is to create a SIEM system following this architecture.
 
-![alt text](<Untitled Diagram.png>)
+![image](/assets/Architecture.png)
 
 Therefore, we are able not only to prevent different types of vulnarability attacks using firewall (opensource firewall "Suricata") but also manage the system in case of cyber security using Wazuh.
 
