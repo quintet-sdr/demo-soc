@@ -5,7 +5,7 @@ By:
 - Nguen Ilya-Linh - i.nguen@innopolis.university
 - Zavadskii Peter - p.zavadskii@innopolis.university
 
-### Goal/Tasks of the Project 
+### Goal/Tasks of the Project
 
 The main goal of the project, is to create a SIEM system following this architecture.
 
@@ -13,7 +13,14 @@ The main goal of the project, is to create a SIEM system following this architec
 
 Therefore, we are able not only to prevent different types of vulnarability attacks using firewall (opensource firewall "Suricata") but also manage the system in case of cyber security using Wazuh.
 
-### Execution plan/Methodology
+Thus, we have the following stack : 
+
+* 5 virtual machines. 3 Ubuntu, 1 Windows and 1 ParrotOS
+* Wazuh (SIEM system)
+* Suricata (Firewall)
+* Nginx (Load-balancer)
+
+### Configuration plan (Environment preparartion) 
 
 1) Architecture creation, configuring private network using L3 router and starting components deploying.
 
