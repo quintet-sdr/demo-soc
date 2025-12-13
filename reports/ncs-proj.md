@@ -26,6 +26,10 @@ Therefore, we are able not only to prevent different types of vulnarability atta
 
 1) We followed the execution plan and created a private network with all nessecary components.
 
+![image](/assets/development-1.jpg)
+---
+![image](/assets/development-2.jpg)
+
 ### Difficulties faced, new skills acquired during the project
 
 ### Conclusion, contemplations, and judgment
