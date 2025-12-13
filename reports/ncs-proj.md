@@ -32,4 +32,20 @@ Therefore, we are able not only to prevent different types of vulnarability atta
 
 ### Difficulties faced, new skills acquired during the project
 
+There were several difficulties related to wazuh agent-server connection and Windows machine integration. 
+
+
+However, we finally coped with it.
+
+![image](/assets/wazuh_master.jpg)
+
+Therefore, we increased our understanding in devops sphere.
 ### Conclusion, contemplations, and judgment
+
+The project successfully implemented a SOC model based on open tools: Suricata for network protection and Wazuh for Diptych nodes. The architecture with nginx and JuiceShop allows you to test attack detection (for example, XSS) and handle incidents.
+
+The system demonstrated the importance of centralized event collection to quickly identify threats. Such a testbed could become the basis for more complex scenarios, including automation of response (SOAR) and cloud deployment.
+
+## Github link
+https://github.com/quintet-sdr/demo-soc
+## Demo
