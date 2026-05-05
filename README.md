@@ -3,7 +3,7 @@
 > A compact, hands-on SOC lab showcasing centralized logging, IDS/IPS detection, WAF-like filtering, and incident handling across a multi-OS environment.
 
 ### Pages
-- Report: [reports/GalievNguenZevadskii_report.md](./reports/GalievNguenZevadskii_report.md)
+- Report: [reports/GalievNguenZevadskii_report.md](./reports/GalievNguenZavadskii_report.md)
 - Demo video: [recordings/GalievNguenZavadskii-demo.mp4](./recordings/GalievNguenZavadskii-demo.mp4)
 
 ![Architecture](/assets/Architecture.png)
